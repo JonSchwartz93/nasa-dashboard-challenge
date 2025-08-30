@@ -83,7 +83,8 @@ If you navigate to [http://localhost:3001/documentation](http://localhost:3001/d
 
 ## Future Improvements
 - Improved loading states in the `<AsteroidTable>` component. It's a bit choppy at the moment. One approach that I personally like and believe makes for a seamless user experience is to use [skeleton loaders](https://www.chakra-ui.com/docs/components/skeleton)
-- I'd like to pagainte the data we get back from NASA. UI-wise, this might include a <Prev/[page #]/Next> style pagination or we could fetch additional advocates as the user scrolls. An infinite-scroll experience is relatively easy to implement on using @tanstack-query's [useInfiniteQuery hook](https://tanstack.com/query/v4/docs/framework/react/reference/useInfiniteQuery).
-- On the topic of pagination, I'd like to fetch an inital batch of asteroids server-side so that they are visible when a user iniitally lands on the dashboard.
+- I'd like to paginate the data we get back from NASA. UI-wise, this might include a <Prev/[page #]/Next> style pagination or we could fetch additional advocates as the user scrolls. An infinite-scroll experience is relatively easy to implement using @tanstack-query's [useInfiniteQuery hook](https://tanstack.com/query/v4/docs/framework/react/reference/useInfiniteQuery).
+- On the topic of pagination, I'd like to fetch an initial batch of asteroids server-side so that they are visible when a user iniitally lands on the dashboard.
 - Improve the mobile-responsiveness of the application
 - Add the ability for users to adjust unit of measurement (miles vs. kilometers vs. meters vs. feet)
+- Improve overall error handling/edge cases
