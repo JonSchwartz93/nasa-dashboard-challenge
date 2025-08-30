@@ -1,0 +1,20 @@
+{
+  "name": "nasa-dashboard-challenge",
+  "description": "AMEX &lt;> Nasa Take-Home Challenge",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "dev": "concurrently \"npm run dev:backend\" \"npm run dev:frontend\"",
+    "dev:frontend": "cd frontend && npm start",
+    "dev:backend": "cd backend && npm run dev",
+    "install:all": "npm install && cd frontend && npm install && cd ../backend && npm install"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/react": "^19.1.12",
+    "concurrently": "^9.2.1",
+    "ts-node": "^10.9.2"
+  }
+}
