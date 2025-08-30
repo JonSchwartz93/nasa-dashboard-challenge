@@ -1,5 +1,7 @@
 import Fastify from 'fastify';
 import cors from '@fastify/cors';
+import swagger from '@fastify/swagger';
+import swaggerUI from '@fastify/swagger-ui';
 import { nearEathObjectsRoute } from './routes/neo.js';
 
 const fastify = Fastify({
@@ -8,6 +10,28 @@ const fastify = Fastify({
 
 await fastify.register(cors, {
   origin: process.env.NODE_ENV === 'production' ? false : ['http://localhost:3001']
+});
+
+await fastify.register(swagger, {
+  swagger: {
+    info: {
+      title: 'NASA Dashboard',
+      description: 'API for fetching data from NASA\'s Near Earth Objects Web Service',
+      version: '1.0.0'
+    },
+    host: 'localhost:3001',
+    schemes: ['http'],
+    consumes: ['application/json'],
+    produces: ['application/json']
+  }
+});
+
+await fastify.register(swaggerUI, {
+  routePrefix: '/documentation',
+  uiConfig: {
+    docExpansion: 'full',
+    deepLinking: false
+  }
 });
 
 await fastify.register(nearEathObjectsRoute, { prefix: '/api' });

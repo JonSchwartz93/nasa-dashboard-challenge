@@ -20,10 +20,121 @@ export async function nearEathObjectsRoute(
     };
   }>(
     "/neo",
+    {
+      schema: {
+        description: "Get Near Earth Objects for a date range",
+        tags: ["NASA Near Earth Objects"],
+        querystring: {
+          type: "object",
+          properties: {
+            start_date: {
+              type: "string",
+              description: "Start date in YYYY-MM-DD format",
+            },
+            end_date: {
+              type: "string",
+              description: "End date in YYYY-MM-DD format",
+            },
+          },
+          required: ["start_date"],
+        },
+        response: {
+          200: {
+            type: "object",
+            properties: {
+              count: { type: "number" },
+              objects: {
+                type: "array",
+                items: {
+                  type: "object",
+                  properties: {
+                    id: {
+                      type: "string",
+                      description: "Near Earth Object's ID",
+                    },
+                    name: {
+                      type: "string",
+                      description: 'The name of the NEO (i.e. "2004 VJ1")',
+                    },
+                    size: {
+                      type: "number",
+                      description: "Average diameter of the NEO in miles",
+                    },
+                    distance: {
+                      type: "number",
+                      description: "The NEO's distance from Earth in miles",
+                    },
+                    velocity: {
+                      type: "string",
+                      description: "The NEO'Relative velocity in mph",
+                    },
+                    is_potentially_hazardous: {
+                      type: "boolean",
+                      description:
+                        "Whether or not the NEO is hazardous to Earth",
+                    },
+                    approach_date: {
+                      type: "string",
+                      description:
+                        "Date the NEO will be closest to Earth (YYYY-MM-DD)",
+                    },
+                  },
+                  required: [
+                    "id",
+                    "name",
+                    "size",
+                    "distance",
+                    "velocity",
+                    "is_potentially_hazardous",
+                    "approach_date",
+                  ],
+                },
+              },
+            },
+          },
+          400: {
+            description: "Invalid request parameters",
+            type: "object",
+            properties: {
+              error: {
+                type: "string",
+                example:
+                  'Invalid date format. Ensure that "end_date" is after "start_date"',
+              },
+            },
+          },
+          403: {
+            description: "Invalid or missing NASA API key",
+            type: "object",
+            properties: {
+              error: {
+                type: "string",
+                example: "NASA API key is invalid or rate limit exceeded",
+              },
+            },
+          },
+          500: {
+            description: "Internal server error",
+            type: "object",
+            properties: {
+              error: { type: "string", example: "Failed to fetch NASA data" },
+            },
+          },
+        },
+      },
+    },
     async (req, res) => {
       try {
         const { start_date, end_date } = req.query;
         const endDate = end_date || start_date;
+
+        if (new Date(endDate) < new Date(start_date)) {
+          await res.status(400).send({
+            error: '"end_date" cannot be before "start_date"',
+          });
+
+          return;
+        }
 
         const response = await axios.get<NasaApiResponse>(
           `${NASA_BASE_URL}/feed`,
