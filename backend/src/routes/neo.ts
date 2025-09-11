@@ -17,6 +17,8 @@ export async function nearEathObjectsRoute(
     Querystring: {
       start_date: string;
       end_date?: string;
+      smallestSize?: number;
+      largestSize?: number;
     };
   }>(
     "/neo",
@@ -125,7 +127,7 @@ export async function nearEathObjectsRoute(
     },
     async (req, res) => {
       try {
-        const { start_date, end_date } = req.query;
+        const { start_date, end_date, smallestSize, largestSize } = req.query;
         const endDate = end_date || start_date;
 
         if (new Date(endDate) < new Date(start_date)) {
@@ -157,12 +159,15 @@ export async function nearEathObjectsRoute(
           })),
         );
 
+        const filterAllObjectsBySize: FormattedNearEarthObject[] = (smallestSize && largestSize && allObjects.filter((object: FormattedNearEarthObject) => smallestSize <= object.size && object.size <= largestSize));
+
         return {
           start_date,
           end_date: endDate,
-          count: allObjects.length,
-          objects: allObjects,
+          count: filterAllObjectsBySize.length,
+          objects: filterAllObjectsBySize,
         };
+
       } catch (error) {
         fastify.log.error("NASA API Error:", error as any);
 
